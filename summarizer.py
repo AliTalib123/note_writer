@@ -23,11 +23,7 @@ def load_models():
 asr_pipe, tokenizer, model, device = load_models()
 
 def fix_glued_words(text):
-    """
-    Split any glued tokens that have no spaces using wordninja.
-    Only splits tokens that look wrong (all lowercase, long, no punctuation).
-    Leaves normal spaced words, URLs, numbers, and hyphenated words untouched.
-    """
+ 
     def fix_token(token):
         # Skip short words, hyphenated, numeric, or already normal
         if len(token) <= 5 or '-' in token or token.isnumeric():
@@ -43,7 +39,7 @@ def fix_glued_words(text):
     words = text.split()
     return ' '.join(fix_token(w) for w in words)
 
-# ---------------- Cleaning ----------------
+
 def clean_text(text):
     # Fix OCR mid-word spaces: "self -driving" → "self-driving"
     text = re.sub(r'(\w{3,})\s{1,2}-\s{1,2}(\w+)', r'\1-\2', text)
@@ -64,11 +60,11 @@ def clean_text(text):
     text = re.sub(r"\s+", " ", text)
     text = text.strip()
 
-    # Fix all glued words using wordninja dictionary splitting
+
     text = fix_glued_words(text)
     text = re.sub(r"\s+", " ", text).strip()
 
-    # Remove duplicate sentences
+   
     sentences = re.split(r'(?<=[.!?]) +', text)
     seen, deduped = set(), []
     for s in sentences:
@@ -85,9 +81,9 @@ def postprocess_summary(summary):
         summary += '.'
     return summary
 
-# ---------------- Summarizer ----------------
+
 def chunk_text(text, max_words=900):
-    """Split text into chunks that fit within BART's token limit."""
+   
     sentences = re.split(r'(?<=[.!?]) +', text)
     chunks, chunk = [], ""
     for sent in sentences:
@@ -133,7 +129,7 @@ def summarize_text(text):
 
     combined = " ".join(partial_summaries)
 
-    # Post-generation ratio check
+    
     actual_words = len(combined.split())
     ratio = actual_words / total_words if total_words > 0 else 0
     if ratio < 0.25:
@@ -145,21 +141,19 @@ def summarize_text(text):
 
     return postprocess_summary(combined)
 
-# ---------------- Audio helpers ----------------
+
 def split_audio(data, samplerate, chunk_sec=30):
     chunk_len = chunk_sec * samplerate
     return [data[i:i+chunk_len] for i in range(0, len(data), chunk_len)]
 
-# ────────────────────────────────────────────────────────────────
-# Streamlit UI
-# ────────────────────────────────────────────────────────────────
+
 
 mode = st.sidebar.radio(
     "Choose Mode",
     ["Lecture Summarizer", "Document Summarizer"]
 )
 
-# ---------------- Lecture Summarizer ----------------
+
 if mode == "Lecture Summarizer":
     st.title("🎙️ Tongxue")
     if "lecture_summary" not in st.session_state:
@@ -195,7 +189,7 @@ if mode == "Lecture Summarizer":
             txt_data.seek(0)
             st.download_button("⬇️ Download Lecture Summary", txt_data, file_name.strip(), "text/plain")
 
-# ---------------- Document Summarizer ----------------
+
 elif mode == "Document Summarizer":
     st.title("📄 Wenjian")
 
