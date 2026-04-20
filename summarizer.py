@@ -4,7 +4,7 @@ import io
 import numpy as np
 import soundfile as sf
 import re
-import PyPDF2
+import pypdf
 import torch
 import wordninja
 
@@ -211,7 +211,7 @@ elif mode == "Document Summarizer":
     if uploaded_file and st.button("Process Document"):
         with st.spinner("Processing..."):
             if uploaded_file.type == "application/pdf":
-                reader = PyPDF2.PdfReader(uploaded_file)
+                reader = pypdf.PdfReader(uploaded_file)
                 pages_text = [page.extract_text() or "" for page in reader.pages]
                 raw_text = " ".join(pages_text)
             else:
