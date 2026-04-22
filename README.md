@@ -3,3 +3,6 @@ This application consists of two part. first part you just start record anything
 
 
 The dataset used for training https://huggingface.co/datasets/abisee/cnn_dailymail
+
+
+the video link https://drive.google.com/drive/u/1/home
