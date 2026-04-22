@@ -15,7 +15,7 @@ def load_models():
         model="openai/whisper-base"
     )
     tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
-    model =BartForConditionalGeneration.from_pretrained("facebook/bart-base").to(device)
+    model =BartForConditionalGeneration.from_pretrained("facebook/bart-base")
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
     return asr_pipe, tokenizer, model, device
